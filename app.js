@@ -1,6 +1,97 @@
 // Evil-Eval: Prompt Generator
 
+
+// Populate dropdown on page load
+function updateSavedInputsDropdown() {
+    const select = document.getElementById('savedInputs');
+    if (!select) return;
+    while (select.options.length > 1) select.remove(1);
+    let names = JSON.parse(localStorage.getItem('evil-eval-names') || '[]');
+    names.forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        select.appendChild(opt);
+    });
+}
+updateSavedInputsDropdown();
+
+// Load saved input when dropdown changes
+document.getElementById('savedInputs').addEventListener('change', function() {
+    const name = this.value;
+    if (!name) return;
+    const data = JSON.parse(localStorage.getItem('evil-eval-input-' + name) || '{}');
+    if (!data || !data.employeeName) return;
+    // Set value for input (type="text")
+    const employeeNameInput = document.getElementById('employeeName');
+    if (employeeNameInput) employeeNameInput.value = data.employeeName || '';
+    // Set value for select
+    const pronounsSelect = document.getElementById('pronouns');
+    if (pronounsSelect) pronounsSelect.value = data.pronouns || '';
+    // Set value for textareas
+    const studentServicesTextarea = document.getElementById('studentServices');
+    if (studentServicesTextarea) studentServicesTextarea.value = data.studentServices || '';
+    const collegeServiceStrengthsTextarea = document.getElementById('collegeServiceStrengths');
+    if (collegeServiceStrengthsTextarea) collegeServiceStrengthsTextarea.value = data.collegeServiceStrengths || '';
+    const collegeServiceImprovementsTextarea = document.getElementById('collegeServiceImprovements');
+    if (collegeServiceImprovementsTextarea) collegeServiceImprovementsTextarea.value = data.collegeServiceImprovements || '';
+    const workAccomplishmentsTextarea = document.getElementById('workAccomplishments');
+    if (workAccomplishmentsTextarea) workAccomplishmentsTextarea.value = data.workAccomplishments || '';
+    const workPerformanceStrengthsTextarea = document.getElementById('workPerformanceStrengths');
+    if (workPerformanceStrengthsTextarea) workPerformanceStrengthsTextarea.value = data.workPerformanceStrengths || '';
+    const workPerformanceImprovementsTextarea = document.getElementById('workPerformanceImprovements');
+    if (workPerformanceImprovementsTextarea) workPerformanceImprovementsTextarea.value = data.workPerformanceImprovements || '';
+    const overallNotesTextarea = document.getElementById('overallNotes');
+    if (overallNotesTextarea) overallNotesTextarea.value = data.overallNotes || '';
+});
+
 document.getElementById('eval-form').addEventListener('submit', function(e) {
+    // Save form input to localStorage under employee name
+    function getFormData() {
+        return {
+            employeeName: document.getElementById('employeeName').value.trim(),
+            pronouns: document.getElementById('pronouns').value,
+            studentServices: document.getElementById('studentServices').value,
+            collegeServiceStrengths: document.getElementById('collegeServiceStrengths').value,
+            collegeServiceImprovements: document.getElementById('collegeServiceImprovements').value,
+            workAccomplishments: document.getElementById('workAccomplishments').value,
+            workPerformanceStrengths: document.getElementById('workPerformanceStrengths').value,
+            workPerformanceImprovements: document.getElementById('workPerformanceImprovements').value,
+            overallNotes: document.getElementById('overallNotes').value
+        };
+    }
+
+    function saveFormData(name, data) {
+        if (!name) return;
+        localStorage.setItem('evil-eval-input-' + name, JSON.stringify(data));
+        // Update the list of names
+        let names = JSON.parse(localStorage.getItem('evil-eval-names') || '[]');
+        if (!names.includes(name)) {
+            names.push(name);
+            localStorage.setItem('evil-eval-names', JSON.stringify(names));
+        }
+    }
+
+    function updateSavedInputsDropdown() {
+        const select = document.getElementById('savedInputs');
+        if (!select) return;
+        // Remove all except the first option
+        while (select.options.length > 1) select.remove(1);
+        let names = JSON.parse(localStorage.getItem('evil-eval-names') || '[]');
+        names.forEach(name => {
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = name;
+            select.appendChild(opt);
+        });
+    }
+
+    // On submit, save input
+    let employeeName = document.getElementById('employeeName').value.trim();
+    if (employeeName) {
+        saveFormData(employeeName, getFormData());
+        updateSavedInputsDropdown();
+    }
     // Get and format student services as a markdown bulleted list
     let studentServicesRaw = document.getElementById('studentServices').value.trim();
     let studentServicesList = [];
@@ -9,7 +100,7 @@ document.getElementById('eval-form').addEventListener('submit', function(e) {
         studentServicesList = studentServicesRaw.split(/\n|,/).map(s => s.trim()).filter(Boolean);
     }
     let studentServicesMarkdown = studentServicesList.length
-        ? studentServicesList.map(s => `- ${s}`).join('\n')
+        ? studentServicesList.map(s => s.match(/^\s*-/) ? s : `- ${s}`).join('\n')
         : '';
 
     // Get other College Service fields
@@ -23,7 +114,7 @@ document.getElementById('eval-form').addEventListener('submit', function(e) {
         workAccomplishmentsList = workAccomplishmentsRaw.split(/\n|,/).map(s => s.trim()).filter(Boolean);
     }
     let workAccomplishmentsMarkdown = workAccomplishmentsList.length
-        ? workAccomplishmentsList.map(s => `- ${s}`).join('\n')
+        ? workAccomplishmentsList.map(s => s.match(/^\s*-/) ? s : `- ${s}`).join('\n')
         : '';
     const workPerformanceStrengths = document.getElementById('workPerformanceStrengths').value.trim();
     const workPerformanceImprovements = document.getElementById('workPerformanceImprovements').value.trim();
@@ -31,7 +122,6 @@ document.getElementById('eval-form').addEventListener('submit', function(e) {
     // Get Overall notes
     const overallNotes = document.getElementById('overallNotes').value.trim();
     e.preventDefault();
-    let employeeName = document.getElementById('employeeName').value.trim();
     // Capitalize each word in the name
     employeeName = employeeName.replace(/\b\w+/g, function(word) {
         return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
@@ -116,6 +206,50 @@ document.getElementById('copyBtn').addEventListener('click', function() {
             this.disabled = false;
         }, 1200);
     });
+});
+
+// Populate dropdown on page load
+function updateSavedInputsDropdown() {
+    const select = document.getElementById('savedInputs');
+    if (!select) return;
+    while (select.options.length > 1) select.remove(1);
+    let names = JSON.parse(localStorage.getItem('evil-eval-names') || '[]');
+    names.forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        select.appendChild(opt);
+    });
+}
+updateSavedInputsDropdown();
+
+// Load saved input when dropdown changes
+document.getElementById('savedInputs').addEventListener('change', function() {
+    const name = this.value;
+    if (!name) return;
+    const data = JSON.parse(localStorage.getItem('evil-eval-input-' + name) || '{}');
+    if (!data || !data.employeeName) return;
+    // Set value for input (type="text")
+    const employeeNameInput = document.getElementById('employeeName');
+    if (employeeNameInput) employeeNameInput.value = data.employeeName || '';
+    // Set value for select
+    const pronounsSelect = document.getElementById('pronouns');
+    if (pronounsSelect) pronounsSelect.value = data.pronouns || '';
+    // Set value for textareas
+    const studentServicesTextarea = document.getElementById('studentServices');
+    if (studentServicesTextarea) studentServicesTextarea.value = data.studentServices || '';
+    const collegeServiceStrengthsTextarea = document.getElementById('collegeServiceStrengths');
+    if (collegeServiceStrengthsTextarea) collegeServiceStrengthsTextarea.value = data.collegeServiceStrengths || '';
+    const collegeServiceImprovementsTextarea = document.getElementById('collegeServiceImprovements');
+    if (collegeServiceImprovementsTextarea) collegeServiceImprovementsTextarea.value = data.collegeServiceImprovements || '';
+    const workAccomplishmentsTextarea = document.getElementById('workAccomplishments');
+    if (workAccomplishmentsTextarea) workAccomplishmentsTextarea.value = data.workAccomplishments || '';
+    const workPerformanceStrengthsTextarea = document.getElementById('workPerformanceStrengths');
+    if (workPerformanceStrengthsTextarea) workPerformanceStrengthsTextarea.value = data.workPerformanceStrengths || '';
+    const workPerformanceImprovementsTextarea = document.getElementById('workPerformanceImprovements');
+    if (workPerformanceImprovementsTextarea) workPerformanceImprovementsTextarea.value = data.workPerformanceImprovements || '';
+    const overallNotesTextarea = document.getElementById('overallNotes');
+    if (overallNotesTextarea) overallNotesTextarea.value = data.overallNotes || '';
 });
 });
 

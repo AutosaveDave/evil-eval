@@ -15,6 +15,12 @@
                 <input type="text" id="employeeName" required />
             </div>
             <div class="form-header-item">
+                <label for="savedInputs">Load Saved Input:</label>
+                <select id="savedInputs">
+                    <option value="" selected>-- Select Name --</option>
+                </select>
+            </div>
+            <div class="form-header-item">
                 <label for="pronouns">Pronouns:</label>
                 <select id="pronouns" required>
                     <option value="" disabled selected>Select Pronouns</option>
@@ -49,13 +55,16 @@
                 <textarea id="overallNotes" rows="2" placeholder="Any additional notes for the evaluation"></textarea>
             </section>
         </div>
-            
-            <button type="submit">Generate Prompt</button>
+            <div id="gen-btn-div">
+                <button type="submit" id="gen-prompt-btn">Generate Prompt</button>
+            </div>
         </form>
-        <h2>Generated Prompt (Markdown):</h2>
-        <button id="copyBtn" type="button" style="display:none;margin-bottom:10px;">Copy</button>
-        <button id="saveBtn" type="button" style="display:none;margin-bottom:10px;">Save</button>
-        <pre id="output"></pre>
+        <div class="form-section">
+            <h3>Generated Prompt (Markdown):</h3>
+            <button id="copyBtn" type="button" style="display:none;margin-bottom:10px;">Copy</button>
+            <button id="saveBtn" type="button" style="display:none;margin-bottom:10px;">Save</button>
+            <pre id="output"></pre>
+        </div>
     </div>
     <script src="app.js"></script>
 </body>
