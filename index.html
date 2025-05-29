@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evil-Eval: Performance Evaluation Prompt Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <form id="eval-form">
+        <div class="form-header-row floating-header">
+            <div class="form-header-item">
+                <label for="employeeName">Employee Name:</label>
+                <input type="text" id="employeeName" required />
+            </div>
+            <div class="form-header-item">
+                <label for="pronouns">Pronouns:</label>
+                <select id="pronouns" required>
+                    <option value="she/her" selected>she/her</option>
+                    <option value="he/him">he/him</option>
+                    <option value="they/them">they/them</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-sections">
+            <section class="form-section" id="section-college-service">
+                <h3>College Service</h3>
+                <label for="studentServices">Student Services (list each service on a new line, or separate with commas):</label>
+                <textarea id="studentServices" rows="3" placeholder="e.g. Academic Advising, Financial Aid, Tutoring"></textarea>
+                <label for="collegeServiceStrengths">Strengths in College Service:</label>
+                <textarea id="collegeServiceStrengths" rows="2" placeholder="Describe strengths in college service"></textarea>
+                <label for="collegeServiceImprovements">Areas for Improvement in College Service:</label>
+                <textarea id="collegeServiceImprovements" rows="2" placeholder="Describe areas for improvement in college service (optional)"></textarea>
+            </section>
+            <section class="form-section" id="section-work-performance">
+                <h3>Work Performance</h3>
+                <label for="workAccomplishments">Work Accomplishments (optional):</label>
+                <textarea id="workAccomplishments" rows="2" placeholder="List work accomplishments (optional)"></textarea>
+                <label for="workPerformanceStrengths">Strengths in Work Performance:</label>
+                <textarea id="workPerformanceStrengths" rows="2" placeholder="Describe strengths in work performance"></textarea>
+                <label for="workPerformanceImprovements">Areas for Improvement in Work Performance:</label>
+                <textarea id="workPerformanceImprovements" rows="2" placeholder="Describe areas for improvement in work performance (optional)"></textarea>
+            </section>
+            <section class="form-section" id="section-overall">
+                <h3>Overall</h3>
+                <label for="overallNotes">Additional Notes:</label>
+                <textarea id="overallNotes" rows="2" placeholder="Any additional notes for the evaluation"></textarea>
+            </section>
+        </div>
+            
+            <button type="submit">Generate Prompt</button>
+        </form>
+        <h2>Generated Prompt (Markdown):</h2>
+        <button id="copyBtn" type="button" style="display:none;margin-bottom:10px;">Copy</button>
+        <button id="saveBtn" type="button" style="display:none;margin-bottom:10px;">Save</button>
+        <pre id="output"></pre>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

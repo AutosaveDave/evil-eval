@@ -1,0 +1,14 @@
+{
+  "name": "evil-eval",
+  "version": "1.0.0",
+  "description": "Prompt Generator for Generating Performance Evaluations",
+  "scripts": {
+    "start": "npx serve .",
+    "predeploy": "npm run build || echo 'No build step'",
+    "deploy": "gh-pages -d ."
+  },
+  "devDependencies": {
+    "gh-pages": "^6.0.0",
+    "serve": "^14.0.1"
+  }
+}

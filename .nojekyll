@@ -1,0 +1,2 @@
+// This file ensures prompt-template.txt is included in the published output for gh-pages deployments.
+// It is not used by the app, but prevents some static hosts from ignoring .txt files.
