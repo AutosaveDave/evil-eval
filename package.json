@@ -10,5 +10,8 @@
   "devDependencies": {
     "gh-pages": "^6.0.0",
     "serve": "^14.0.1"
+  },
+  "dependencies": {
+    "evil-eval": "file:"
   }
 }
